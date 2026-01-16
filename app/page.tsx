@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-// 1. IMPORT MINIKIT HOOKS & CONFIG
 import { useComposeCast } from "@coinbase/onchainkit/minikit";
 import { minikitConfig } from "../minikit.config"; 
 import styles from "./page.module.css";
@@ -79,8 +78,8 @@ type SkinType = "DEFAULT" | "JESSE" | "BRIAN" | "KERSA";
 
 const SKIN_IMAGES: Record<SkinType, string | null> = {
     DEFAULT: null, 
-    JESSE: "/jesse.jpg",
-    BRIAN: "/brian.png",       
+    JESSE: "/jesseman.png",
+    BRIAN: "/brianman.png",       
     KERSA: "/kersa.jpg"        
 };
 
@@ -251,13 +250,11 @@ export default function PacmanGame() {
   const isWall = (x: number, y: number) => (y < 0 || y >= MAP_SIZE || x < 0 || x >= MAP_SIZE) ? true : grid[y][x] === 1;
   const handleMobileInput = (d: Direction) => { nextDirRef.current = d; };
 
-  // --- 4. HANDLE SHARE X (TWITTER) ---
   const getXShareLink = () => {
     const text = gameStatus === "WON" 
-      ? `🏆 I just WON in Pac-Man! Score: ${score}.`
-      : `👻 I got eaten in Pac-Man... Score: ${score}.`;
+      ? `🏆 I just WON in Jesse-Man! Score: ${score}.`
+      : `👻 I got eaten in Jesse-Man... Score: ${score}.`;
     
-    // Fallback jika config belum dimuat
     const baseUrl = minikitConfig?.miniapp?.homeUrl || "https://warpcast.com";
     const shareUrl = `${baseUrl}/share/${score}-${gameStatus}`;
     const encodedText = encodeURIComponent(text);
@@ -266,13 +263,11 @@ export default function PacmanGame() {
     return `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`;
   };
 
-  // --- 5. HANDLE SHARE FARCASTER (MINIKIT SDK FIXED) ---
   const handleShareFarcaster = () => {
     const text = gameStatus === "WON" 
-      ? `🏆 I just WON in Pac-Man! Score: ${score}.`
-      : `👻 I got eaten in Pac-Man... Score: ${score}.`;
+      ? `I just WON in Jesse-Man! Score: ${score} 🏆. `
+      : `I got eaten in Jesse-Man... Score: ${score} 👻.`;
       
-    // Gunakan URL dari Config (Wajib HTTPS Public URL)
     const baseUrl = minikitConfig?.miniapp?.homeUrl || ""; 
     const shareDataPath = `${score}-${gameStatus}`;
     const embedUrl = `${baseUrl}/share/${shareDataPath}`;
@@ -314,7 +309,7 @@ export default function PacmanGame() {
 
         {gameStatus === "MENU" && (
             <div className={styles.menuOverlay}>
-                <h1 className={styles.title}>PAC-MAN</h1>
+                <h1 className={styles.title}>JESSE-MAN</h1>
                 
                 <div className={styles.optionsContainer}>
                     <div className={styles.label}>DIFFICULTY</div>

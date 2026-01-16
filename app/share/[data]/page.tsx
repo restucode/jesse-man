@@ -21,12 +21,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       images: [dynamicImageUrl],
     },
     other: {
-      // Config untuk Mini App / Frame v2
+      
       "fc:frame": JSON.stringify({
         version: "next",
         imageUrl: dynamicImageUrl,
         button: {
-          title: "Main Lagi",
+          title: "Play Again",
           action: {
             type: "launch_frame",
             name: "Jesse-Man",
@@ -61,8 +61,6 @@ export default async function SharePage({ params }: Props) {
         {status === "WON" ? "YOU WON!" : "GAME OVER"}
       </h2>
       <p style={{ fontSize: "2rem" }}>Score: {score}</p>
-      
-      {/* Gunakan Link dari next/link */}
       <Link href="/" style={{ color: "yellow", marginTop: "20px", textDecoration: "underline" }}>
         Play Again
       </Link>

@@ -1,27 +1,20 @@
-/* page.module.css */
 
-/* --- CONTAINER UTAMA --- */
 .container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* PERBAIKAN RESPONSIVE: Gunakan flex-start agar bagian atas tidak terpotong saat di-scroll */
   justify-content: flex-start; 
-  /* PERBAIKAN: Gunakan 100dvh (Dynamic Viewport Height) untuk mobile browser modern */
   height: 100dvh; 
   min-height: 100vh;
   background-color: #111;
   color: white;
-  padding: 20px 10px; /* Padding agar tidak mepet layar */
+  padding: 20px 10px; 
   font-family: 'Courier New', Courier, monospace;
-  /* PERBAIKAN: Allow scrolling vertikal */
   overflow-y: auto; 
   user-select: none;
-  /* Smooth scrolling */
   scroll-behavior: smooth;
 }
 
-/* Helper agar konten tetap di tengah vertikal jika layar besar (Desktop) */
 .container::before, .container::after {
   content: '';
   margin: auto;
@@ -30,7 +23,7 @@
 .header {
   margin-bottom: 20px;
   text-align: center;
-  flex-shrink: 0; /* Header tidak boleh mengecil */
+  flex-shrink: 0; 
   z-index: 20;
 }
 
@@ -47,16 +40,13 @@
   background-color: #000;
   border: 4px solid #333;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-  /* Menjaga rasio aspek kotak sempurna sesuai grid 15x15 */
   aspect-ratio: 1 / 1; 
   width: 100%;
   max-width: 600px; 
-  /* Agar board tidak gepeng saat discroll di layar sempit */
   flex-shrink: 0; 
   display: grid;
   grid-template-columns: repeat(15, 1fr);
   grid-template-rows: repeat(15, 1fr);
-  /* Margin auto membantu centering saat flex-start aktif */
   margin: 10px 0; 
 }
 
@@ -111,7 +101,6 @@
 }
 
 /* --- STUNNED EFFECT --- */
-/* Target ::after (untuk default skin/ghost) DAN .skinImage (untuk custom skin) */
 .stunned::after,
 .stunned .skinImage {
   filter: grayscale(100%) brightness(0.7) !important;
@@ -127,8 +116,6 @@
    PACMAN STYLES (DEFAULT & SKIN)
    ========================================= */
 
-/* 1. DEFAULT SKIN (CSS Murni - Kuning) */
-/* Hanya aktif jika class .defaultSkin ada */
 .pacman.defaultSkin::after {
   content: '';
   width: 80%;
@@ -144,7 +131,6 @@
   animation: chomp 0.2s infinite alternate;
 }
 
-/* Rotasi Default Skin */
 .pacman.defaultSkin[data-direction="RIGHT"]::after { transform: rotate(0deg); }
 .pacman.defaultSkin[data-direction="DOWN"]::after { transform: rotate(90deg); }
 .pacman.defaultSkin[data-direction="LEFT"]::after { transform: rotate(180deg); }
@@ -155,16 +141,14 @@
   100% { background: conic-gradient(#ffd700 0deg, transparent 0deg, transparent 360deg, #ffd700 360deg); }
 }
 
-/* 2. IMAGE SKIN (Gambar Upload) */
 .skinImage {
   width: 90%;
   height: 90%;
   object-fit: contain;
-  image-rendering: pixelated; /* Agar pixel art tajam */
+  image-rendering: pixelated; 
   transition: transform 0.1s linear;
 }
 
-/* Rotasi untuk Skin Gambar */
 .actor[data-direction="RIGHT"] .skinImage { transform: rotate(0deg); }
 .actor[data-direction="DOWN"] .skinImage { transform: rotate(90deg); }
 .actor[data-direction="LEFT"] .skinImage { transform: scaleX(-1); } /* Mirror Flip */
@@ -195,7 +179,7 @@
    ========================================= */
 .controls {
   margin-top: 10px;
-  margin-bottom: 20px; /* Margin bawah agar bisa discroll pol */
+  margin-bottom: 20px; 
   display: grid;
   gap: 10px;
   grid-template-columns: repeat(3, 60px);
@@ -240,17 +224,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* PERBAIKAN: Mulai dari atas agar tidak terpotong */
   justify-content: flex-start; 
   text-align: center;
   padding: 20px;
   
-  /* PERBAIKAN: Agar menu bisa discroll */
   overflow-y: auto; 
   -webkit-overflow-scrolling: touch;
 }
 
-/* Spacer agar konten menu ada di tengah secara visual tapi aman discroll */
 .menuOverlay::before {
   content: '';
   flex-grow: 1; 
@@ -262,7 +243,6 @@
   min-height: 20px;
 }
 
-/* Konten di dalam menu agar tidak menyusut aneh */
 .menuOverlay > * {
   flex-shrink: 0;
 }
@@ -374,7 +354,6 @@
   font-weight: bold;
 }
 
-/* Responsiveness untuk HP Kecil */
 @media (max-width: 400px) {
   .gameBoard {
     max-width: 95vw;
@@ -396,7 +375,6 @@
   margin: 20px 0;
   font-size: 0.9rem; 
   color: white;
-  /* Flexbox membantu meratakan teks dan gambar */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -406,15 +384,12 @@
 
 
 .inlineBaseLogo {
-  /* KUNCI RESPONSIF: 1em artinya tingginya sama persis dengan ukuran font saat ini */
   height: 1.1em; 
-  width: auto; /* Lebar menyesuaikan proporsi gambar */
+  width: auto; 
   display: inline-block;
   
-  /* Menyejajarkan gambar secara vertikal dengan tengah teks */
   vertical-align: middle;
   
-  /* Sedikit penyesuaian posisi jika dirasa kurang pas di tengah */
   position: relative;
   top: -1px;
 }
@@ -440,7 +415,7 @@
   transition: transform 0.1s, opacity 0.2s;
   border: none;
   cursor: pointer;
-  font-family: sans-serif; /* Agar font tombol share lebih standar */
+  font-family: sans-serif; 
 }
 
 .shareBtn:hover {
@@ -449,11 +424,11 @@
 }
 
 .shareX {
-  background-color: #000; /* Hitam X */
+  background-color: #000; 
   border: 1px solid #333;
 }
 
 .shareFarcaster {
-  background-color: #472a91; /* Ungu Warpcast */
+  background-color: #472a91; 
   border: 1px solid #5b36b5;
 }

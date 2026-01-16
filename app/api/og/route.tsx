@@ -8,7 +8,6 @@ export async function GET(request: Request) {
   const score = searchParams.get('score') || '0';
   const status = searchParams.get('status') || 'PLAYING';
 
-  // Perbaikan: Gunakan 'WON' huruf besar sesuai page.tsx
   const isWin = status === 'WON';
   const title = isWin ? 'YOU WON!' : 'GAME OVER';
   const titleColor = isWin ? '#4ade80' : '#ef4444'; 
@@ -36,7 +35,7 @@ export async function GET(request: Request) {
         }} />
 
         <div style={{ fontSize: 80, fontWeight: 'bold', color: '#ffd700', marginBottom: 20, textShadow: '0 0 20px rgba(255, 215, 0, 0.5)' }}>
-          PAC-MAN
+          JESSE-MAN
         </div>
 
         <div style={{ fontSize: 60, fontWeight: 'bold', color: titleColor, marginBottom: 40, textTransform: 'uppercase' }}>
