@@ -9,30 +9,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   try {
     const { data } = await params;
     const [score, status] = data.split('-');
-
-    // Pastikan homeUrl valid. Jika tidak, gambar tidak akan muncul.
-    // const baseUrl = minikitConfig.miniapp.homeUrl;
-    // const imageUrl = `${baseUrl}/api/og?score=${score}&status=${status}`;
-
-    // return {
-    //   title: `Pac-Man Result: ${status}`,
-    //   description: `I scored ${score} in Pac-Man!`,
-    //   other: {
-    //     "fc:miniapp": JSON.stringify({
-    //       version: minikitConfig.miniapp.version,
-    //       imageUrl: imageUrl, // Ini yang dirender Farcaster
-    //       button: {
-    //         title: "Play Pac-Man",
-    //         action: {
-    //           name: "Play Pac-Man",
-    //           type: "launch_frame",
-    //           url: baseUrl, 
-    //         },
-    //       },
-    //     }),
-    //   },
-    // };
-
     return {
       title: minikitConfig.miniapp.name,
       description: minikitConfig.miniapp.description,
