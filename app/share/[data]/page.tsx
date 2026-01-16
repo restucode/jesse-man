@@ -1,66 +1,62 @@
-import { minikitConfig } from "../../../minikit.config";
+// app/share/[data]/page.tsx
 import { Metadata } from "next";
 
 type Props = {
-  params: Promise<{ data: string }>;
+  params: { data: string };
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  try {
-    const { data } = await params;
-    const [score, status] = data.split('-');
-    return {
-      title: minikitConfig.miniapp.name,
-      description: minikitConfig.miniapp.description,
-      other: {
-        "fc:miniapp": JSON.stringify({
-          version: minikitConfig.miniapp.version,
-          imageUrl: `${minikitConfig.miniapp.homeUrl}/api/og?score=${score}&status=${status}`,
-          button: {
-            title: `Join the ${minikitConfig.miniapp.name}`,
-            action: {
-              name: `Launch ${minikitConfig.miniapp.name}`,
-              type: "launch_frame",
-              url: `${minikitConfig.miniapp.homeUrl}`,
-            },
+  // 1. Ekstrak skor dan status dari slug (format: "345-WON")
+  const [score, status] = params.data.split("-");
+  
+  // 2. Arahkan URL gambar ke API OG dinamis Anda
+  const baseUrl = process.env.NEXT_PUBLIC_HOME_URL || "https://jesse-man.vercel.app";
+  const dynamicImageUrl = `${baseUrl}/api/og?score=${score}&status=${status}`;
+
+  return {
+    title: `Jesse-Man Score: ${score}`,
+    openGraph: {
+      images: [dynamicImageUrl],
+    },
+    other: {
+      "fc:frame": JSON.stringify({
+        version: "next", // Gunakan string "next" untuk Farcaster Frames v2
+        imageUrl: dynamicImageUrl,
+        button: {
+          title: "Main Lagi!",
+          action: {
+            type: "launch_frame",
+            name: "Jesse-Man Game",
+            url: baseUrl, // Kembali ke halaman utama game
           },
-        }),
-      },
-    };
-  } catch (e) {
-    const errorMessage = e instanceof Error ? e.message : 'Unknown error';
-    console.log(JSON.stringify({ 
-      timestamp: new Date().toISOString(), 
-      level: 'error', 
-      message: 'Failed to generate metadata', 
-      error: errorMessage 
-    }));
-    
-    return {
-      title: minikitConfig.miniapp.name,
-      description: minikitConfig.miniapp.description,
-    };
-  }
+        },
+      }),
+      // Support untuk Frames v1 (fallback)
+      "fc:frame:image": dynamicImageUrl,
+    },
+  };
 }
 
-export default async function SharePage({ params }: Props) {
-  const { data } = await params;
-  const [score] = data.split('-');
-    
+export default function SharePage({ params }: Props) {
+  const [score, status] = params.data.split("-");
+
   return (
     <div style={{ 
-      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', 
-      height: '100vh', background: '#111', color: 'white', fontFamily: 'monospace' 
+      backgroundColor: "black", 
+      color: "white", 
+      height: "100vh", 
+      display: "flex", 
+      flexDirection: "column", 
+      alignItems: "center", 
+      justifyContent: "center",
+      fontFamily: "monospace" 
     }}>
-      <h1>SCORE: {score}</h1>
-      <p>Redirecting to game...</p>
-      
-      <a 
-        href={minikitConfig.miniapp.homeUrl}
-        style={{ marginTop: 20, padding: '10px 20px', background: '#ffd700', color: 'black', textDecoration: 'none', fontWeight: 'bold', borderRadius: 5 }}
-      >
-        PLAY NOW
-      </a>
+      <h1>PAC-MAN RESULT</h1>
+      <h2 style={{ color: status === "WON" ? "#4ade80" : "#ef4444" }}>
+        {status === "WON" ? "YOU WON!" : "GAME OVER"}
+      </h2>
+      <p style={{ fontSize: "2rem" }}>Score: {score}</p>
+      <a href="/" style={{ color: "yellow", marginTop: "20px" }}>Mainkan Game</a>
     </div>
   );
 }

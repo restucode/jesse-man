@@ -52,6 +52,6 @@ export async function GET(request: Request) {
         </div>
       </div>
     ),
-    { width: 1200, height: 630 },
+    { width: 1200, height: 630, headers: {'Cache-Control': 'public, max-age=31536000, s-maxage=31536000, stale-while-revalidate',}},
   );
 }
