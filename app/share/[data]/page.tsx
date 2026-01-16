@@ -1,16 +1,13 @@
 import { Metadata } from "next";
 import Link from "next/link";
 
-// 1. Definisikan params sebagai Promise
 type Props = {
   params: Promise<{ data: string }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  // 2. Await params sebelum digunakan
   const resolvedParams = await params;
   
-  // Ekstrak skor dan status
   const [score, status] = resolvedParams.data.split("-");
   
   const baseUrl = process.env.NEXT_PUBLIC_HOME_URL || "https://jesse-man.vercel.app";
@@ -34,7 +31,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
             type: "launch_frame",
             name: "Jesse-Man",
             url: baseUrl,
-            splashImageUrl: `${baseUrl}/splash.png`, // Opsional: icon saat loading
+            splashImageUrl: `${baseUrl}/splash.png`, 
             splashBackgroundColor: "#000000",
           },
         },
@@ -43,9 +40,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-// 3. Ubah komponen menjadi async function
 export default async function SharePage({ params }: Props) {
-  // 4. Await params di sini juga
+
   const resolvedParams = await params;
   const [score, status] = resolvedParams.data.split("-");
 
@@ -60,7 +56,7 @@ export default async function SharePage({ params }: Props) {
       justifyContent: "center",
       fontFamily: "monospace" 
     }}>
-      <h1>PAC-MAN RESULT</h1>
+      <h1>JESSE-MAN RESULT</h1>
       <h2 style={{ color: status === "WON" ? "#4ade80" : "#ef4444" }}>
         {status === "WON" ? "YOU WON!" : "GAME OVER"}
       </h2>
@@ -68,7 +64,7 @@ export default async function SharePage({ params }: Props) {
       
       {/* Gunakan Link dari next/link */}
       <Link href="/" style={{ color: "yellow", marginTop: "20px", textDecoration: "underline" }}>
-        Mainkan Game
+        Play Again
       </Link>
     </div>
   );
