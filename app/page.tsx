@@ -73,7 +73,7 @@ const MAPS: Record<MapName, number[][]> = {
 };
 
 type Direction = "UP" | "DOWN" | "LEFT" | "RIGHT" | null;
-type GameStatus = "MENU" | "PLAYING" | "WON" | "LOST";
+type GameStatus = "MENU" | "PLAYING" | "won" | "lost";
 type Difficulty = "EASY" | "MEDIUM" | "HARD";
 type SkinType = "DEFAULT" | "CARTOON" | "PUNK" | "BALD";
 
@@ -183,7 +183,7 @@ export default function PacmanGame() {
     pacmanRef.current = { x, y };
 
     if (ghostsRef.current.some(g => g.x === x && g.y === y && now > g.stunnedUntil)) {
-      setGameStatus("LOST");
+      setGameStatus("lost");
       return;
     }
 
@@ -194,7 +194,7 @@ export default function PacmanGame() {
       newGrid[y][x] = 2; 
       setGrid(newGrid);
       setScore(s => s + 10);
-      if (!newGrid.some(row => row.includes(0))) setGameStatus("WON");
+      if (!newGrid.some(row => row.includes(0))) setGameStatus("won");
     }
 
     ghostsRef.current.forEach(g => {
@@ -206,7 +206,7 @@ export default function PacmanGame() {
         const overlap = g.x === pacmanRef.current.x && g.y === pacmanRef.current.y;
         const swapped = (g.x === oldPacmanPos.x && g.y === oldPacmanPos.y) && (pacmanRef.current.x === oldGhostPos.x && pacmanRef.current.y === oldGhostPos.y);
         
-        if (overlap || swapped) setGameStatus("LOST");
+        if (overlap || swapped) setGameStatus("lost");
     });
 
     const ghosts = ghostsRef.current;
@@ -253,7 +253,7 @@ export default function PacmanGame() {
 
   // --- 4. HANDLE SHARE X (TWITTER) ---
   const getXShareLink = () => {
-    const text = gameStatus === "WON" 
+    const text = gameStatus === "won" 
       ? `🏆 I just WON in Pac-Man! Score: ${score}.`
       : `👻 I got eaten in Pac-Man... Score: ${score}.`;
     
@@ -268,7 +268,7 @@ export default function PacmanGame() {
 
   // --- 5. HANDLE SHARE FARCASTER (MINIKIT SDK FIXED) ---
   const handleShareFarcaster = () => {
-    const text = gameStatus === "WON" 
+    const text = gameStatus === "won" 
       ? `🏆 I just WON in Pac-Man! Score: ${score}.`
       : `👻 I got eaten in Pac-Man... Score: ${score}.`;
       
@@ -277,9 +277,6 @@ export default function PacmanGame() {
     const shareDataPath = `${score}-${gameStatus}`;
     const embedUrl = `${baseUrl}/share/${shareDataPath}`;
 
-    // Panggil SDK
-    // PENTING: Jika di localhost, ini tidak akan muncul popup di browser biasa.
-    // Harus di test di Warpcast Mobile App atau Playground
     if (composeCast) {
         composeCast({
             text: text,
@@ -367,10 +364,10 @@ export default function PacmanGame() {
             </div>
         )}
 
-        {(gameStatus === "WON" || gameStatus === "LOST") && (
+        {(gameStatus === "won" || gameStatus === "lost") && (
             <div className={styles.menuOverlay}>
-                <h2 style={{ color: gameStatus === "WON" ? '#4ade80' : '#ef4444', fontSize: '2.5rem', marginBottom:'10px' }}>
-                    {gameStatus === "WON" ? "YOU WIN!" : "GAME OVER"}
+                <h2 style={{ color: gameStatus === "won" ? '#4ade80' : '#ef4444', fontSize: '2.5rem', marginBottom:'10px' }}>
+                    {gameStatus === "won" ? "YOU WIN!" : "GAME OVER"}
                 </h2>
                 <p style={{fontSize:'1.2rem', marginBottom: '10px'}}>Final Score: {score}</p>
                 
