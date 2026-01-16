@@ -1,14 +1,16 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-// 1. IMPORT MINIKIT HOOKS
-import { useComposeCast } from "@coinbase/onchainkit/minikit";
-import { minikitConfig } from "../minikit.config";
+// 1. IMPORT MINIKIT & CONFIG
+import { useMiniKit, useComposeCast } from "@coinbase/onchainkit/minikit";
+// Sesuaikan path import ini dengan lokasi file minikit.config.ts Anda
+// Jika file ada di root project (sejajar dengan folder app), gunakan "../minikit.config"
+import { minikitConfig } from "../minikit.config"; 
 import styles from "./page.module.css";
 
 const GAME_SPEED = 200; 
 const MAP_SIZE = 15;
-const STUN_DURATION = 750; // 0.75 Detik
+const STUN_DURATION = 750;
 
 // --- MAP CONFIGURATIONS ---
 const MAP_CLASSIC = [
@@ -75,13 +77,13 @@ const MAPS: Record<MapName, number[][]> = {
 type Direction = "UP" | "DOWN" | "LEFT" | "RIGHT" | null;
 type GameStatus = "MENU" | "PLAYING" | "WON" | "LOST";
 type Difficulty = "EASY" | "MEDIUM" | "HARD";
-type SkinType = "DEFAULT" | "JESSE" | "BRIAN" | "KERSA";
+type SkinType = "DEFAULT" | "CARTOON" | "PUNK" | "BALD";
 
 const SKIN_IMAGES: Record<SkinType, string | null> = {
     DEFAULT: null, 
-    JESSE: "/jesse.jpg",
-    BRIAN: "/brian.png",       
-    KERSA: "/kersa.jpg"        
+    CARTOON: "/skins/cartoon.png",
+    PUNK: "/skins/punk.png",       
+    BALD: "/skins/bald.png"        
 };
 
 interface Ghost {
@@ -94,8 +96,8 @@ interface Ghost {
 }
 
 export default function PacmanGame() {
-  // 2. INITIALIZE MINIKIT HOOK
-  const { composeCast } = useComposeCast();
+  const { context } = useMiniKit(); // Ambil context user
+  const { composeCast } = useComposeCast(); // Ambil fungsi share
 
   const [grid, setGrid] = useState<number[][]>([]);
   const [score, setScore] = useState(0);
@@ -252,37 +254,36 @@ export default function PacmanGame() {
   const isWall = (x: number, y: number) => (y < 0 || y >= MAP_SIZE || x < 0 || x >= MAP_SIZE) ? true : grid[y][x] === 1;
   const handleMobileInput = (d: Direction) => { nextDirRef.current = d; };
 
-  // --- 3. URL GENERATOR UNTUK SHARE ---
-  const getShareUrl = () => {
-     // Gunakan origin window atau fallback kosong (untuk SSR safety)
-     const origin = typeof window !== 'undefined' ? window.location.origin : '';
-     const shareDataPath = `${score}-${gameStatus}`;
-     return `${origin}/share/${shareDataPath}`;
-  };
-
   // --- 4. HANDLE SHARE X (TWITTER) ---
   const getXShareLink = () => {
     const text = gameStatus === "WON" 
-      ? `🏆 I just WON in Jesse-Man! Score: ${score}.`
-      : `👻 I got eaten in Jesse-Man... Score: ${score}.`;
+      ? `🏆 I just WON in Pac-Man! Score: ${score}.`
+      : `👻 I got eaten in Pac-Man... Score: ${score}.`;
     
-    const embedUrl = getShareUrl();
+    // Untuk X, kita pakai minikitConfig.miniapp.homeUrl agar linknya valid
+    const shareUrl = `${minikitConfig.miniapp.homeUrl}/share/${score}-${gameStatus}`;
     const encodedText = encodeURIComponent(text);
-    const encodedEmbed = encodeURIComponent(embedUrl);
+    const encodedUrl = encodeURIComponent(shareUrl);
 
-    return `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedEmbed}`;
+    return `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`;
   };
 
-  // --- 5. HANDLE SHARE FARCASTER (MINIKIT SDK) ---
-
+  // --- 5. HANDLE SHARE FARCASTER (MINIKIT SDK FIXED) ---
   const handleShareFarcaster = () => {
+    const text = gameStatus === "WON" 
+      ? `🏆 I just WON in Pac-Man! Score: ${score}.`
+      : `👻 I got eaten in Pac-Man... Score: ${score}.`;
+      
+    // PENTING: Gunakan minikitConfig untuk URL yang stabil/publik
     const shareDataPath = `${score}-${gameStatus}`;
+    const embedUrl = `${minikitConfig.miniapp.homeUrl}/share/${shareDataPath}`;
+
+    // Panggil SDK
     composeCast({
-      text: `Check out ${minikitConfig.miniapp.name}!`,
-      embeds: [`${window.location.origin}/share/${shareDataPath}`]
+        text: text,
+        embeds: [embedUrl]
     });
   };
-
 
   return (
     <div className={styles.container}>
@@ -311,7 +312,7 @@ export default function PacmanGame() {
 
         {gameStatus === "MENU" && (
             <div className={styles.menuOverlay}>
-                <h1 className={styles.title}>JESSE-MAN</h1>
+                <h1 className={styles.title}>PAC-MAN</h1>
                 
                 {/* --- DIFFICULTY --- */}
                 <div className={styles.optionsContainer}>
