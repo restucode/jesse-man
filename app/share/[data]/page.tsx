@@ -9,8 +9,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   try {
     const { data } = await params;
     const [score, status] = data.split('-');
-
-
     return {
       title: minikitConfig.miniapp.name,
       description: minikitConfig.miniapp.description,
