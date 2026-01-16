@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { useComposeCast } from "@coinbase/onchainkit/minikit";
+import { useMiniKit, useComposeCast } from "@coinbase/onchainkit/minikit";
 import { minikitConfig } from "../minikit.config"; 
 import styles from "./page.module.css";
 
@@ -94,7 +94,7 @@ interface Ghost {
 
 export default function PacmanGame() {
   const { composeCast } = useComposeCast(); // Hook MiniKit
-
+  const { isFrameReady, setFrameReady } = useMiniKit();
   const [grid, setGrid] = useState<number[][]>([]);
   const [score, setScore] = useState(0);
   const [gameStatus, setGameStatus] = useState<GameStatus>("MENU");
@@ -111,6 +111,12 @@ export default function PacmanGame() {
   const ghostsRef = useRef<Ghost[]>([]);
   const currentDirRef = useRef<Direction>(null);
   const nextDirRef = useRef<Direction>(null);
+
+    useEffect(() => {
+    if (!isFrameReady) {
+      setFrameReady();
+    }
+  }, [setFrameReady, isFrameReady]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
