@@ -1,10 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-// 1. IMPORT MINIKIT & CONFIG
+// 1. IMPORT MINIKIT HOOKS & CONFIG
 import { useComposeCast } from "@coinbase/onchainkit/minikit";
-// Sesuaikan path import ini dengan lokasi file minikit.config.ts Anda
-// Jika file ada di root project (sejajar dengan folder app), gunakan "../minikit.config"
 import { minikitConfig } from "../minikit.config"; 
 import styles from "./page.module.css";
 
@@ -96,7 +94,7 @@ interface Ghost {
 }
 
 export default function PacmanGame() {
-  const { composeCast } = useComposeCast(); // Ambil fungsi share
+  const { composeCast } = useComposeCast(); // Hook MiniKit
 
   const [grid, setGrid] = useState<number[][]>([]);
   const [score, setScore] = useState(0);
@@ -259,8 +257,9 @@ export default function PacmanGame() {
       ? `🏆 I just WON in Pac-Man! Score: ${score}.`
       : `👻 I got eaten in Pac-Man... Score: ${score}.`;
     
-    // Untuk X, kita pakai minikitConfig.miniapp.homeUrl agar linknya valid
-    const shareUrl = `${minikitConfig.miniapp.homeUrl}/share/${score}-${gameStatus}`;
+    // Fallback jika config belum dimuat
+    const baseUrl = minikitConfig?.miniapp?.homeUrl || "https://warpcast.com";
+    const shareUrl = `${baseUrl}/share/${score}-${gameStatus}`;
     const encodedText = encodeURIComponent(text);
     const encodedUrl = encodeURIComponent(shareUrl);
 
@@ -273,15 +272,22 @@ export default function PacmanGame() {
       ? `🏆 I just WON in Pac-Man! Score: ${score}.`
       : `👻 I got eaten in Pac-Man... Score: ${score}.`;
       
-    // PENTING: Gunakan minikitConfig untuk URL yang stabil/publik
+    // Gunakan URL dari Config (Wajib HTTPS Public URL)
+    const baseUrl = minikitConfig?.miniapp?.homeUrl || ""; 
     const shareDataPath = `${score}-${gameStatus}`;
-    const embedUrl = `${minikitConfig.miniapp.homeUrl}/share/${shareDataPath}`;
+    const embedUrl = `${baseUrl}/share/${shareDataPath}`;
 
     // Panggil SDK
-    composeCast({
-        text: text,
-        embeds: [embedUrl]
-    });
+    // PENTING: Jika di localhost, ini tidak akan muncul popup di browser biasa.
+    // Harus di test di Warpcast Mobile App atau Playground
+    if (composeCast) {
+        composeCast({
+            text: text,
+            embeds: [embedUrl]
+        });
+    } else {
+        console.error("composeCast not available. Are you inside Warpcast?");
+    }
   };
 
   return (
@@ -313,7 +319,6 @@ export default function PacmanGame() {
             <div className={styles.menuOverlay}>
                 <h1 className={styles.title}>PAC-MAN</h1>
                 
-                {/* --- DIFFICULTY --- */}
                 <div className={styles.optionsContainer}>
                     <div className={styles.label}>DIFFICULTY</div>
                     <div className={styles.btnGroup}>
@@ -321,7 +326,6 @@ export default function PacmanGame() {
                     </div>
                 </div>
 
-                {/* --- GHOST COUNT --- */}
                 <div className={styles.optionsContainer}>
                     <div className={styles.label}>GHOSTS</div>
                     <div className={styles.btnGroup}>
@@ -329,7 +333,6 @@ export default function PacmanGame() {
                     </div>
                 </div>
 
-                {/* --- MAP SELECTION --- */}
                 <div className={styles.optionsContainer}>
                     <div className={styles.label}>SELECT MAP</div>
                     <div className={styles.btnGroup}>
@@ -337,7 +340,6 @@ export default function PacmanGame() {
                     </div>
                 </div>
 
-                {/* --- SKIN SELECTION --- */}
                 <div className={styles.optionsContainer}>
                     <div className={styles.label}>CHARACTER SKIN</div>
                     <div className={styles.btnGroup}>
@@ -372,9 +374,7 @@ export default function PacmanGame() {
                 </h2>
                 <p style={{fontSize:'1.2rem', marginBottom: '10px'}}>Final Score: {score}</p>
                 
-                {/* --- SHARE BUTTONS --- */}
                 <div className={styles.shareContainer}>
-                    {/* Share X: Masih pakai Link Biasa */}
                     <a 
                         href={getXShareLink()} 
                         target="_blank" 
@@ -384,7 +384,6 @@ export default function PacmanGame() {
                         Share on X
                     </a>
                     
-                    {/* Share Farcaster: Pakai Button & onClick Handler SDK */}
                     <button 
                         onClick={handleShareFarcaster}
                         className={`${styles.shareBtn} ${styles.shareFarcaster}`}
