@@ -1,6 +1,6 @@
 import { ImageResponse } from 'next/og';
 
-export const dynamic = "force-dynamic";
+export const runtime = 'edge';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -8,7 +8,8 @@ export async function GET(request: Request) {
   const score = searchParams.get('score') || '0';
   const status = searchParams.get('status') || 'PLAYING';
 
-  const isWin = status === 'won';
+  // Perbaikan: Gunakan 'WON' huruf besar sesuai page.tsx
+  const isWin = status === 'WON';
   const title = isWin ? 'YOU WON!' : 'GAME OVER';
   const titleColor = isWin ? '#4ade80' : '#ef4444'; 
 

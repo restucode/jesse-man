@@ -9,13 +9,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   try {
     const { data } = await params;
     const [score, status] = data.split('-');
+
+
     return {
       title: minikitConfig.miniapp.name,
       description: minikitConfig.miniapp.description,
       other: {
         "fc:miniapp": JSON.stringify({
           version: minikitConfig.miniapp.version,
-          // https://jesse-man.vercel.app/api/og?score=345&status=won
           imageUrl: `${minikitConfig.miniapp.homeUrl}/api/og?score=${score}&status=${status}`,
           button: {
             title: `Join the ${minikitConfig.miniapp.name}`,

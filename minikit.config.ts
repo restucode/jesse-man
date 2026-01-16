@@ -1,6 +1,6 @@
 const ROOT_URL =
   process.env.NEXT_PUBLIC_URL ||
-  (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : 'https://jesse-man.vercel.app');
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://jesse-man.vercel.app` : 'https://jesse-man.vercel.app');
 
 /**
  * MiniApp configuration object. Must follow the Farcaster MiniApp specification.
