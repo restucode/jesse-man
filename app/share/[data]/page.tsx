@@ -11,31 +11,58 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const [score, status] = data.split('-');
 
     // Pastikan homeUrl valid. Jika tidak, gambar tidak akan muncul.
-    const baseUrl = minikitConfig.miniapp.homeUrl;
-    const imageUrl = `${baseUrl}/api/og?score=${score}&status=${status}`;
+    // const baseUrl = minikitConfig.miniapp.homeUrl;
+    // const imageUrl = `${baseUrl}/api/og?score=${score}&status=${status}`;
+
+    // return {
+    //   title: `Pac-Man Result: ${status}`,
+    //   description: `I scored ${score} in Pac-Man!`,
+    //   other: {
+    //     "fc:miniapp": JSON.stringify({
+    //       version: minikitConfig.miniapp.version,
+    //       imageUrl: imageUrl, // Ini yang dirender Farcaster
+    //       button: {
+    //         title: "Play Pac-Man",
+    //         action: {
+    //           name: "Play Pac-Man",
+    //           type: "launch_frame",
+    //           url: baseUrl, 
+    //         },
+    //       },
+    //     }),
+    //   },
+    // };
 
     return {
-      title: `Pac-Man Result: ${status}`,
-      description: `I scored ${score} in Pac-Man!`,
+      title: minikitConfig.miniapp.name,
+      description: minikitConfig.miniapp.description,
       other: {
         "fc:miniapp": JSON.stringify({
           version: minikitConfig.miniapp.version,
-          imageUrl: imageUrl, // Ini yang dirender Farcaster
+          imageUrl: `${minikitConfig.miniapp.homeUrl}/api/og/?score=${score}&status=${status}`,
           button: {
-            title: "Play Pac-Man",
+            title: `Join the ${minikitConfig.miniapp.name}`,
             action: {
-              name: "Play Pac-Man",
+              name: `Launch ${minikitConfig.miniapp.name}`,
               type: "launch_frame",
-              url: baseUrl, 
+              url: `${minikitConfig.miniapp.homeUrl}`,
             },
           },
         }),
       },
     };
   } catch (e) {
+    const errorMessage = e instanceof Error ? e.message : 'Unknown error';
+    console.log(JSON.stringify({ 
+      timestamp: new Date().toISOString(), 
+      level: 'error', 
+      message: 'Failed to generate metadata', 
+      error: errorMessage 
+    }));
+    
     return {
-      title: "Pac-Man Game",
-      description: `Play Pac-Man on Farcaster ${e}`,
+      title: minikitConfig.miniapp.name,
+      description: minikitConfig.miniapp.description,
     };
   }
 }
