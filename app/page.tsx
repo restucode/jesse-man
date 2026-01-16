@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 // 1. IMPORT MINIKIT HOOKS
-import { useMiniKit, useComposeCast } from "@coinbase/onchainkit/minikit";
+import { useComposeCast } from "@coinbase/onchainkit/minikit";
 import { minikitConfig } from "../minikit.config";
 import styles from "./page.module.css";
 
@@ -274,7 +274,6 @@ export default function PacmanGame() {
   };
 
   // --- 5. HANDLE SHARE FARCASTER (MINIKIT SDK) ---
-  const { context } = useMiniKit();
 
   const handleShareFarcaster = () => {
     const shareDataPath = `${score}-${gameStatus}`;
