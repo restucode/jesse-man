@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 // 1. IMPORT MINIKIT & CONFIG
-import { useMiniKit, useComposeCast } from "@coinbase/onchainkit/minikit";
+import { useComposeCast } from "@coinbase/onchainkit/minikit";
 // Sesuaikan path import ini dengan lokasi file minikit.config.ts Anda
 // Jika file ada di root project (sejajar dengan folder app), gunakan "../minikit.config"
 import { minikitConfig } from "../minikit.config"; 
@@ -96,7 +96,6 @@ interface Ghost {
 }
 
 export default function PacmanGame() {
-  const { context } = useMiniKit(); // Ambil context user
   const { composeCast } = useComposeCast(); // Ambil fungsi share
 
   const [grid, setGrid] = useState<number[][]>([]);
