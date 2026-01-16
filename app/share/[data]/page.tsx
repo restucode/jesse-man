@@ -35,7 +35,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   } catch (e) {
     return {
       title: "Pac-Man Game",
-      description: "Play Pac-Man on Farcaster",
+      description: `Play Pac-Man on Farcaster ${e}`,
     };
   }
 }
