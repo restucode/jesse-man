@@ -1,5 +1,6 @@
 // app/share/[data]/page.tsx
 import { Metadata } from "next";
+import Link from "next/link";
 
 type Props = {
   params: { data: string };
@@ -56,7 +57,7 @@ export default function SharePage({ params }: Props) {
         {status === "WON" ? "YOU WON!" : "GAME OVER"}
       </h2>
       <p style={{ fontSize: "2rem" }}>Score: {score}</p>
-      <a href="/" style={{ color: "yellow", marginTop: "20px" }}>Mainkan Game</a>
+      <Link href="/" style={{ color: "yellow", marginTop: "20px" }}>Mainkan Game</Link>
     </div>
   );
 }
