@@ -15,7 +15,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       other: {
         "fc:miniapp": JSON.stringify({
           version: minikitConfig.miniapp.version,
-          imageUrl: `${minikitConfig.miniapp.homeUrl}/api/og/?score=${score}&status=${status}`,
+          // https://jesse-man.vercel.app/api/og?score=345&status=won
+          imageUrl: `${minikitConfig.miniapp.homeUrl}/api/og?score=${score}&status=${status}`,
           button: {
             title: `Join the ${minikitConfig.miniapp.name}`,
             action: {
