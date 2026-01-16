@@ -277,7 +277,6 @@ export default function PacmanGame() {
   const { context } = useMiniKit();
 
   const handleShareFarcaster = () => {
-    const userName = context?.user?.displayName || 'anonymous';
     const shareDataPath = `${score}-${gameStatus}`;
     composeCast({
       text: `Check out ${minikitConfig.miniapp.name}!`,
