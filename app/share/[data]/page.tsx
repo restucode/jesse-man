@@ -1,45 +1,53 @@
-// app/share/[data]/page.tsx
 import { Metadata } from "next";
 import Link from "next/link";
 
+// 1. Definisikan params sebagai Promise
 type Props = {
-  params: { data: string };
+  params: Promise<{ data: string }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  // 1. Ekstrak skor dan status dari slug (format: "345-WON")
-  const [score, status] = params.data.split("-");
+  // 2. Await params sebelum digunakan
+  const resolvedParams = await params;
   
-  // 2. Arahkan URL gambar ke API OG dinamis Anda
+  // Ekstrak skor dan status
+  const [score, status] = resolvedParams.data.split("-");
+  
   const baseUrl = process.env.NEXT_PUBLIC_HOME_URL || "https://jesse-man.vercel.app";
   const dynamicImageUrl = `${baseUrl}/api/og?score=${score}&status=${status}`;
 
   return {
     title: `Jesse-Man Score: ${score}`,
     openGraph: {
+      title: `Jesse-Man Score: ${score}`,
+      description: status === "WON" ? "I Won playing Jesse-Man!" : "Game Over!",
       images: [dynamicImageUrl],
     },
     other: {
+      // Config untuk Mini App / Frame v2
       "fc:frame": JSON.stringify({
-        version: "next", // Gunakan string "next" untuk Farcaster Frames v2
+        version: "next",
         imageUrl: dynamicImageUrl,
         button: {
-          title: "Main Lagi!",
+          title: "Main Lagi",
           action: {
             type: "launch_frame",
-            name: "Jesse-Man Game",
-            url: baseUrl, // Kembali ke halaman utama game
+            name: "Jesse-Man",
+            url: baseUrl,
+            splashImageUrl: `${baseUrl}/splash.png`, // Opsional: icon saat loading
+            splashBackgroundColor: "#000000",
           },
         },
       }),
-      // Support untuk Frames v1 (fallback)
-      "fc:frame:image": dynamicImageUrl,
     },
   };
 }
 
-export default function SharePage({ params }: Props) {
-  const [score, status] = params.data.split("-");
+// 3. Ubah komponen menjadi async function
+export default async function SharePage({ params }: Props) {
+  // 4. Await params di sini juga
+  const resolvedParams = await params;
+  const [score, status] = resolvedParams.data.split("-");
 
   return (
     <div style={{ 
@@ -57,7 +65,11 @@ export default function SharePage({ params }: Props) {
         {status === "WON" ? "YOU WON!" : "GAME OVER"}
       </h2>
       <p style={{ fontSize: "2rem" }}>Score: {score}</p>
-      <Link href="/" style={{ color: "yellow", marginTop: "20px" }}>Mainkan Game</Link>
+      
+      {/* Gunakan Link dari next/link */}
+      <Link href="/" style={{ color: "yellow", marginTop: "20px", textDecoration: "underline" }}>
+        Mainkan Game
+      </Link>
     </div>
   );
 }
